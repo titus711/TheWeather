@@ -1,19 +1,13 @@
 <resources>
     <string name="app_name">TheWeather</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="dev_name">Titus Nangi</string>
     <string name="weather_api_key"></string>
-
     <string name="tab1">Today</string>
     <string name="tab2">5 DAYS Forecast</string>
-
     <string name="settings">Settings</string>
-
     <string name="hatfield">Pretoria</string>
-    <string name="pretoria">Pretoria</string>
-
     <!-- CurrentWeatherFragment all strings -->
     <string name="today">Today</string>
     <string name="sunrise">Sunrise:</string>

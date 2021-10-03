@@ -5,8 +5,8 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.titusnangi.chucknorrisproject"
-        minSdkVersion 21
+        applicationId "com.titusnangi.theweather"
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"

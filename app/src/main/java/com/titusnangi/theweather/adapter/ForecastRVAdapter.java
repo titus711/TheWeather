@@ -64,12 +64,12 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
         holder.tempDescTV.setText(weatherList.get(position).getWeather().get(0).getDescription());
 
         // humidity
-        String humidity = " " + context.getString(R.string.humidity) +": "+ weatherList.get(position).getMain().getHumidity() + " %";
-        holder.humidityTV.setText(humidity);
+//        String humidity = " " + context.getString(R.string.humidity) +": "+ weatherList.get(position).getMain().getHumidity() + " %";
+//        holder.humidityTV.setText(humidity);
 
         // cloud
-        String cloud = " " + context.getString(R.string.clouds) +": "+ weatherList.get(position).getClouds().getAll() + " %";
-        holder.cloudTV.setText(cloud);
+//        String cloud = " " + context.getString(R.string.clouds) +": "+ weatherList.get(position).getClouds().getAll() + " %";
+//        holder.cloudTV.setText(cloud);
 
         //MAX TEMP
         String maxTemp = " " + context.getString(R.string.max_temp) + ": " +weatherList.get(position).getMain().getTempMax().intValue();
@@ -114,7 +114,7 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
             dateTV = itemView.findViewById(R.id.dateFTV);
             tempTV = itemView.findViewById(R.id.tempFTV);
             tempDescTV = itemView.findViewById(R.id.tempDescriptionFTV);
-            humidityTV = itemView.findViewById(R.id.humidityTV);
+//            humidityTV = itemView.findViewById(R.id.humidityTV);
             cloudTV = itemView.findViewById(R.id.cloudsTV);
             maxTempTV = itemView.findViewById(R.id.tempMaxFTV);
             minTempTV = itemView.findViewById(R.id.tempMinFTV);
