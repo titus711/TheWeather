@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class TimeAndDateConverter {
 
-    public  static String getDate(long dateInSeconds){
+    public static String getDate(long dateInSeconds) {
         Date date = new Date(dateInSeconds * 1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
         String dateString = dateFormat.format(date);
@@ -16,7 +16,7 @@ public class TimeAndDateConverter {
         return dateString;
     }
 
-    public static String getTime(long timeInSeconds){
+    public static String getTime(long timeInSeconds) {
         Date time = new Date(timeInSeconds * 1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         String timeString = dateFormat.format(time);
@@ -25,7 +25,7 @@ public class TimeAndDateConverter {
         return timeString;
     }
 
-    public static String getDay(long timeInSeconds){
+    public static String getDay(long timeInSeconds) {
 
         // current date
         Date currentDate = Calendar.getInstance().getTime();
@@ -38,7 +38,7 @@ public class TimeAndDateConverter {
         //SimpleDateFormat formatterAPIdate = new SimpleDateFormat("dd/MM/yyyy");
         String dayNameString = datFormat.format(day);
 
-        if (currentDate.equals(day)){
+        if (currentDate.equals(day)) {
             return "Today";
         }
 
