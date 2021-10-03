@@ -9,10 +9,10 @@ import retrofit2.http.Url;
 
 public interface WeatherServiceApi {
 
-    @GET("weather?")
+    @GET
     Call<CurrentWeatherResponse> getCurrentWeatherResponse(@Url String endUrl);
 
-    @GET("forecast/daily?")
+    @GET
     Call<ForecastWeatherResponse> getForecastWeatherResponse(@Url String forecastEndUrl);
 
 }
