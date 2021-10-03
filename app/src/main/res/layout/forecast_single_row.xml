@@ -33,21 +33,21 @@
                     android:id="@+id/hourFTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3 PM"
+                    android:text="@string/_3_pm"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/dateNameFTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sunday"
+                    android:text="@string/sunday"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/dateFTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="03 - 10 - 2021" />
+                    android:text="@string/_03_10_2021" />
             </LinearLayout>
 
             <LinearLayout
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:layout_marginTop="5dp"
-                        android:text="29"
+                        android:text="@string/_29"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -85,7 +85,7 @@
                     android:id="@+id/tempDescriptionFTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="sunny"
+                    android:text="@string/sunny"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -103,14 +103,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Max Temp 30" />
+                    android:text="@string/max_temp_30" />
 
                 <TextView
                     android:id="@+id/tempMinFTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Min Temp 29" />
+                    android:text="@string/min_temp_29" />
             </LinearLayout>
 
         </LinearLayout>

@@ -35,4 +35,11 @@
     <string name="pretoria">Pretoria</string>
     <string name="enter_city_name_to_search">Enter City Name To Search</string>
     <string name="_5_days_3_hour_forecast">5 Days / 3 Hour Forecast</string>
+    <string name="_3_pm">3 PM</string>
+    <string name="sunday">Sunday</string>
+    <string name="_03_10_2021">03 - 10 - 2021</string>
+    <string name="max_temp_30">Max Temp 30</string>
+    <string name="min_temp_29">Min Temp 29</string>
+    <string name="sunny">sunny</string>
+    <string name="_29">29</string>
 </resources>
