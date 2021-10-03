@@ -27,4 +27,12 @@
     <string name="unit_c">℃</string>
     <string name="unit_f">℉</string>
     <string name="degree">Degree</string>
+    <string name="app_source_code_https_github_com_titus711_theweather">App source code https://github.com/titus711/TheWeather</string>
+    <string name="developed_by_ntitus_nangi">developed by\nTitus Nangi</string>
+    <string name="theweather_version_1_0_1">TheWeather (Version- 1.0.1)</string>
+    <string name="about">About</string>
+    <string name="search_by_city">Search by city</string>
+    <string name="pretoria">Pretoria</string>
+    <string name="enter_city_name_to_search">Enter City Name To Search</string>
+    <string name="_5_days_3_hour_forecast">5 Days / 3 Hour Forecast</string>
 </resources>
