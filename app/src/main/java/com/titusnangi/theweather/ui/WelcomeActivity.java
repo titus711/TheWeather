@@ -1,11 +1,9 @@
-package com.titusnangi.theweather;
+package com.titusnangi.theweather.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class WelcomeActivity extends AppCompatActivity {
 
