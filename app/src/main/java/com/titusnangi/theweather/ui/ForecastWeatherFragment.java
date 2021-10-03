@@ -3,64 +3,102 @@ package com.titusnangi.theweather.ui;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.titusnangi.theweather.R;
+import com.titusnangi.theweather.adapter.ForecastRVAdapter;
+import com.titusnangi.theweather.api.RetrofitClient;
+import com.titusnangi.theweather.api.WeatherServiceApi;
+import com.titusnangi.theweather.model.forecastweather.ForecastWeatherResponse;
+import com.titusnangi.theweather.utils.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ForecastWeatherFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
 public class ForecastWeatherFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView weatherListRV;
+    private TextView cityFTV;
+    private ForecastRVAdapter adapter;
+    private String forecast_weather_url;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    // Required empty public constructor
     public ForecastWeatherFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ForecastWeatherFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ForecastWeatherFragment newInstance(String param1, String param2) {
-        ForecastWeatherFragment fragment = new ForecastWeatherFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forecast_weather, container, false);
-    }
+
+        View view = inflater.inflate(R.layout.fragment_forecast_weather, container, false);
+
+
+        weatherListRV = view.findViewById(R.id.weatherListRV);
+        cityFTV = view.findViewById(R.id.cityFTV);
+
+        WeatherServiceApi weatherServiceAPI = RetrofitClient.getClient(Constants.baseUrl.WEATHER_BASE_URL).create(WeatherServiceApi.class);
+        double latitude = getArguments().getDouble("lat");
+        double longitude = getArguments().getDouble("lng");
+
+        forecast_weather_url = String.format("forecast?lat=%f&lon=%f&units=metric&appid=%s", latitude, longitude, Constants.apiKeys.WEATHER_API);
+
+        weatherServiceAPI.getForecastWeatherResponse(forecast_weather_url)
+                .enqueue(new Callback<ForecastWeatherResponse>() {
+                    @Override
+                    public void onResponse(Call<ForecastWeatherResponse> call, Response<ForecastWeatherResponse> response) {
+                        if (response.isSuccessful()) {
+                            ForecastWeatherResponse forecastWeatherResponse = response.body();
+
+                            List<com.titusnangi.theweather.model.forecastweather.List> weatherLists = forecastWeatherResponse.getList();
+
+                            String userCity = forecastWeatherResponse.getCity().getName() + ", ";
+                            String userCountry = forecastWeatherResponse.getCity().getCountry();
+
+                            if (userCity.contains(getString(R.string.hatfield))) {
+                                String pretoria_country = "Weather in " + getString(R.string.pretoria) + ", " + userCountry;
+                                cityFTV.setText(pretoria_country);
+                            } else {
+                                String city_country = "Weather in " + userCity + userCountry;
+                                cityFTV.setText(city_country);
+                            }
+
+                            if (adapter == null) {
+                                adapter = new ForecastRVAdapter(weatherLists, getContext());
+
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                                linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                                weatherListRV.setLayoutManager(linearLayoutManager);
+                                weatherListRV.setAdapter(adapter);
+                            } else {
+                                adapter.updateCollection(weatherLists);
+
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ForecastWeatherResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), " Failed to load" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("ForecastFailed: ", t.getMessage() + "\n" + t.getLocalizedMessage());
+                    }
+                });
+
+
+        return view;
+    } // ending onCreateView
+
 }

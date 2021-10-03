@@ -1,5 +1,7 @@
 package com.titusnangi.theweather.ui;
 
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,60 +9,182 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
 import com.titusnangi.theweather.R;
+import com.titusnangi.theweather.api.RetrofitClient;
+import com.titusnangi.theweather.api.WeatherServiceApi;
+import com.titusnangi.theweather.model.currentweather.CurrentWeatherResponse;
+import com.titusnangi.theweather.utils.Constants;
+import com.titusnangi.theweather.utils.TimeAndDateConverter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CurrentWeatherFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
 public class CurrentWeatherFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private TextView temp, city, temp_des, date, sunrise, sunset,
+            humidityTV, pressureTV, minTempTV, maxTempTV,
+            cloudsTV, windTV;
+    private Switch unit_switch;
+    private ImageView temp_icon;
+    private Context context;
+    private String weather_url;
+    private String switch_unit_status = "metric";
+    private FusedLocationProviderClient locationProviderClient;
+    private Location lastLocation;
+    //WeatherServiceAPI weatherServiceAPI;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    //private Double latitude, longitude;
 
     public CurrentWeatherFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CurrentWeatherFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CurrentWeatherFragment newInstance(String param1, String param2) {
-        CurrentWeatherFragment fragment = new CurrentWeatherFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_current_weather, container, false);
+        View view = inflater.inflate(R.layout.fragment_current_weather, container, false);
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+        temp = view.findViewById(R.id.tempTV);
+        city = view.findViewById(R.id.cityTV);
+        date = view.findViewById(R.id.dateTV);
+        temp_des = view.findViewById(R.id.descriptionWeather);
+        temp_icon = view.findViewById(R.id.weatherImage);
+        sunrise = view.findViewById(R.id.sunriseTV);
+        sunset = view.findViewById(R.id.sunsetTV);
+        humidityTV = view.findViewById(R.id.humidityTV);
+        pressureTV = view.findViewById(R.id.pressureTV);
+        cloudsTV = view.findViewById(R.id.cloudsTV);
+        windTV = view.findViewById(R.id.windsTV);
+        maxTempTV = view.findViewById(R.id.tempMaxTV);
+        minTempTV = view.findViewById(R.id.tempMinTV);
+        unit_switch = view.findViewById(R.id.unit_switch);
+        unit_switch.setChecked(false);
+        unit_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    switch_unit_status = "imperial";
+                    getWeatherByUnit(switch_unit_status);
+                } else {
+                    switch_unit_status = "metric";
+                    getWeatherByUnit(switch_unit_status);
+                }
+            }
+        });
+        getWeatherByUnit(switch_unit_status);
+
+
+        return view;
+    } // ending onCreateView
+
+
+    private void getWeatherByUnit(String switch_unit_status) {
+        WeatherServiceApi weatherServiceAPI = RetrofitClient.getClient(Constants.baseUrl.WEATHER_BASE_URL).create(WeatherServiceApi.class);
+
+        double latitude = getArguments().getDouble("lat");
+        double longitude = getArguments().getDouble("lng");
+
+        weather_url = String.format("weather?lat=%f&lon=%f&units=%s&appid=%s", latitude, longitude, switch_unit_status, Constants.apiKeys.WEATHER_API);
+
+        //String weather_url = String.format("weather?q=pretoria&units=metric&appid=%s", apiKey);
+        weatherServiceAPI.getCurrentWeatherResponse(weather_url)
+                .enqueue(new Callback<CurrentWeatherResponse>() {
+                    @Override
+                    public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+                        if (response.isSuccessful()) {
+                            CurrentWeatherResponse currentWeatherResponse = response.body();
+
+                            // weather icon
+                            String weatherIcon = currentWeatherResponse.getWeather().get(0).getIcon();
+                            String iconUrl = Constants.baseUrl.WEATHER_IMAGE_BASE_URL + weatherIcon + ".png";
+                            Picasso.get()
+                                    .load(iconUrl)
+                                    .into(temp_icon);
+
+                            // weather in celsius and Fahrenheit
+                            // winds in sec and hour
+                            int Temp = currentWeatherResponse.getMain().getTemp().intValue();
+                            String winds = getString(R.string.winds) + "\n" + currentWeatherResponse.getWind().getSpeed();
+                            if (unit_switch.isChecked()) {
+                                String tempInF = Temp + " " + getString(R.string.unit_f);
+                                temp.setText(tempInF);
+
+                                String windsKInF = winds + " m/h";
+                                windTV.setText(windsKInF);
+                            } else {
+                                String tempInC = Temp + " " + getString(R.string.unit_c);
+                                temp.setText(tempInC);
+
+                                String windsMInF = winds + " m/s";
+                                windTV.setText(windsMInF);
+                            }
+
+                            // weather description
+                            temp_des.setText(currentWeatherResponse.getWeather().get(0).getDescription());
+
+                            // City name and Country CODE
+                            String userCity = currentWeatherResponse.getName() + ", ";
+                            String userCountry = currentWeatherResponse.getSys().getCountry();
+                            if (userCity.contains(getString(R.string.hatfield))) {
+                                String pretoria_country = getString(R.string.pretoria) + ", " + userCountry;
+                                city.setText(pretoria_country);
+                            } else {
+                                String city_country = userCity + userCountry;
+                                city.setText(city_country);
+                            }
+
+                            // today date
+                            String dateString = getString(R.string.today) + " " + TimeAndDateConverter.getDate(currentWeatherResponse.getDt());
+                            date.setText(dateString);
+
+                            //sunrise time
+                            String sunriseString = getString(R.string.sunrise) + " " + TimeAndDateConverter.getTime(currentWeatherResponse.getSys().getSunrise()) + ", ";
+                            sunrise.setText(sunriseString);
+
+                            //sunset time
+                            String sunsetString = getString(R.string.senset) + " " + TimeAndDateConverter.getTime(currentWeatherResponse.getSys().getSunset());
+                            sunset.setText(sunsetString);
+
+                            // humidity
+                            String humidity = getString(R.string.humidity) + "\n" + currentWeatherResponse.getMain().getHumidity() + " %";
+                            humidityTV.setText(humidity);
+
+                            //pressure
+                            String pressure = getString(R.string.pressure) + "\n" + currentWeatherResponse.getMain().getPressure().intValue() + " hpa";
+                            pressureTV.setText(pressure);
+
+                            // clouds
+                            String clouds = getString(R.string.clouds) + "\n" + currentWeatherResponse.getClouds().getAll() + " %";
+                            cloudsTV.setText(clouds);
+
+
+                            //MAX TEMP
+                            String maxTemp = getString(R.string.max_temp) + "\n" + currentWeatherResponse.getMain().getTempMax().intValue();
+                            maxTempTV.setText(maxTemp);
+
+                            //MIN TEMP
+                            String minTemp = getString(R.string.min_temp) + "\n" + currentWeatherResponse.getMain().getTempMin().intValue();
+                            minTempTV.setText(minTemp);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
+                    }
+                });
+
     }
+
 }
