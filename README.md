@@ -1,5 +1,5 @@
 # TheWeather
-TheWeather app is a simple weather forecast app, which uses some APIs to fetch 5 day / 3 hour forecast data from the OpenWeatherMap and to fetch cities. 
+TheWeather app is a simple weather forecast app, which uses retrofit to fetch 5 day / 3 hour forecast data from the OpenWeatherMap through searching by city name. 
 
  Libraries and tools 🛠
  
