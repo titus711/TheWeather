@@ -27,7 +27,6 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
     }
 
 
-
     @NonNull
     @Override
     public ForecastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,7 +39,7 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
     public void onBindViewHolder(@NonNull ForecastViewHolder holder, int position) {
         // set icon
         String icon = weatherList.get(position).getWeather().get(0).getIcon();
-        String iconUrl = Constants.baseUrl.WEATHER_IMAGE_BASE_URL+icon+".png";
+        String iconUrl = Constants.baseUrl.WEATHER_IMAGE_BASE_URL + icon + ".png";
         Picasso.get().load(iconUrl).into(holder.weatherIcon);
 
         // day name
@@ -55,46 +54,20 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
         String dateString = TimeAndDateConverter.getDate(weatherList.get(position).getDt());
         holder.dateTV.setText(dateString);
 
-
         // weather in degree celsius
         int tempInC = weatherList.get(position).getMain().getTemp().intValue();
-        holder.tempTV.setText(tempInC+" \u2103");
+        holder.tempTV.setText(tempInC + " \u2103");
 
         // weather description
         holder.tempDescTV.setText(weatherList.get(position).getWeather().get(0).getDescription());
 
-        // humidity
-//        String humidity = " " + context.getString(R.string.humidity) +": "+ weatherList.get(position).getMain().getHumidity() + " %";
-//        holder.humidityTV.setText(humidity);
-
-        // cloud
-//        String cloud = " " + context.getString(R.string.clouds) +": "+ weatherList.get(position).getClouds().getAll() + " %";
-//        holder.cloudTV.setText(cloud);
-
         //MAX TEMP
-        String maxTemp = " " + context.getString(R.string.max_temp) + ": " +weatherList.get(position).getMain().getTempMax().intValue();
+        String maxTemp = " " + context.getString(R.string.max_temp) + ": " + weatherList.get(position).getMain().getTempMax().intValue();
         holder.maxTempTV.setText(maxTemp);
 
         //MIN TEMP
-        String minTemp = " " + context.getString(R.string.min_temp) + ": " +weatherList.get(position).getMain().getTempMin().intValue();
+        String minTemp = " " + context.getString(R.string.min_temp) + ": " + weatherList.get(position).getMain().getTempMin().intValue();
         holder.minTempTV.setText(minTemp);
-
-        //pressure
-        String pressure = context.getString(R.string.pressure) + ": " + weatherList.get(position).getMain().getPressure().intValue() + " hpa";
-        holder.pressureFTV.setText(pressure);
-
-        // clouds
-        String clouds = context.getString(R.string.clouds) + ": " +weatherList.get(position).getClouds().getAll() + " %";
-        holder.cloudsAllFTV.setText(clouds);
-
-        // winds
-        String winds = context.getString(R.string.winds)
-                + ": " + weatherList.get(position).getWind().getSpeed() + " m/s\n"
-                + context.getString(R.string.degree)
-                + ": " + weatherList.get(position).getWind().getDeg();
-        holder.windsFTV.setText(winds);
-
-
     }
 
     @Override
@@ -102,7 +75,7 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
         return weatherList.size();
     }
 
-    public class ForecastViewHolder extends RecyclerView.ViewHolder{
+    public class ForecastViewHolder extends RecyclerView.ViewHolder {
         TextView dateNameTV, dateTV, tempTV, tempDescTV, humidityTV,
                 cloudTV, maxTempTV, minTempTV, hourFTV, windsFTV, pressureFTV, cloudsAllFTV;
         ImageView weatherIcon;
@@ -114,7 +87,6 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
             dateTV = itemView.findViewById(R.id.dateFTV);
             tempTV = itemView.findViewById(R.id.tempFTV);
             tempDescTV = itemView.findViewById(R.id.tempDescriptionFTV);
-//            humidityTV = itemView.findViewById(R.id.humidityTV);
             cloudTV = itemView.findViewById(R.id.cloudsTV);
             maxTempTV = itemView.findViewById(R.id.tempMaxFTV);
             minTempTV = itemView.findViewById(R.id.tempMinFTV);
@@ -124,7 +96,7 @@ public class ForecastRVAdapter extends RecyclerView.Adapter<ForecastRVAdapter.Fo
         }
     }
 
-    public void updateCollection(java.util.List<List> weatherList){
+    public void updateCollection(java.util.List<List> weatherList) {
         this.weatherList = weatherList;
         notifyDataSetChanged();
     }
